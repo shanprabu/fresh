@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
+use App\Forex;
 
 class GetForexRates extends Command
 {
@@ -42,14 +43,34 @@ class GetForexRates extends Command
         $this->info('Fetching Forex Rates. Please wait...');
         $client=new Client(array('base_uri'=>'http://api.fixer.io/'));
         $response=$client->request('GET','latest?base=USD');
-        //$this->info($response);
         $rateInfo=json_decode($response->getBody()->getContents());
-        //print_r($rateInfo);
-        //dd($rateInfo);
         
-        $this->info('1 USD = ' . $rateInfo->rates->AUD . ' AUD');
+        $forex = new Forex;
+        
+        $forexRecord=array(
+            array('currency'=>'AUD','currencyrate'=>$rateInfo->rates->AUD),
+            array('currency'=>'EUR','currencyrate'=>$rateInfo->rates->EUR),
+            array('currency'=>'GBP','currencyrate'=>$rateInfo->rates->GBP),
+            array('currency'=>'INR','currencyrate'=>$rateInfo->rates->INR)
+        );
+        
+        $this->info('1 USD = ' . $rateInfo->rates->AUD . ' AUD');        
         $this->info('1 USD = ' . $rateInfo->rates->EUR . ' EUR');
         $this->info('1 USD = ' . $rateInfo->rates->GBP . ' GBP');
         $this->info('1 USD = ' . $rateInfo->rates->INR . ' INR');
+        
+        foreach($forexRecord as $forexInfo)
+        {
+            if($forex->where('currency',$forexInfo['currency'])->count()==0)
+            {
+                $this->info('Created');
+                $forex->firstOrCreate($forexInfo);
+            }
+            else
+            {
+                $this->info ('Updated');
+                $forex->where('currency',$forexInfo['currency'])->update($forexInfo);
+            }
+        }
     }
 }
