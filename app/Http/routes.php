@@ -18,3 +18,4 @@
  */
 
 Route::get('/','HomeController@Index');
+Route::get('/login','HomeController@Login');
