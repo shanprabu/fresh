@@ -22,4 +22,21 @@ class HomeController extends Controller
         $data['title']='Login';
         return view('login',$data);
     }
+    
+    public function ajaxCheck()
+    {
+        $data['title']='AJAX Check';
+        return view('ajaxcheck',$data);        
+    }
+    
+    public function ajaxReturn(Request $request)
+    {
+        $param=$request->get('forexid');
+        $forex=new Forex;
+        $returnData=$forex->where('currency',$param)->get();
+        //return "Test of Ajax " . $returnData->currencyrate;
+        //return "Test of Ajax " . json_encode($returnData);
+        //return "USD 1 = " . $returnData[0]['currency'] . " " . $returnData[0]['currencyrate'];
+        return json_encode($returnData);
+    }
 }

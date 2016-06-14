@@ -19,3 +19,5 @@
 
 Route::get('/','HomeController@Index');
 Route::get('/login','HomeController@Login');
+Route::get('/ajax','HomeController@ajaxCheck');
+Route::get('/ajaxreturn','HomeController@ajaxReturn');
