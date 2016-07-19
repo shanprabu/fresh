@@ -7,7 +7,8 @@
 <h2>AJAX Check</h2>
 <hr/>
 <div class="container-fluid">
-    <form class="form-horizontal">
+    <form class="form-horizontal" method="POST">
+        {{ csrf_field() }}
         <fieldset>
             <div class="form-group">
                 <label for="inputId" class="col-lg-2 control-label">Forex ID</label>
