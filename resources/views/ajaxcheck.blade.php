@@ -15,29 +15,51 @@
                     <input type="text" class="form-control" name="forexid" id="forexid" placeholder="Forex ID">
                 </div>
                 <div class="col-lg-2">
-                    <a href="#" class="btn btn-default" id="getrate">Get Rate</a>
+                    <a href="#" class="btn btn-success" id="getrate">Get Rate</a>
                 </div>
             </div>
         </fieldset>
     </form>
-    <div class="row" id="div1">
-        
+    <div class="row">
+        <div class="col-lg-2"></div>        
+        <div class="col-lg-8" id="div1"></div>        
+        <div class="col-lg-2"></div>        
     </div>
 </div>
 <script>
     $(document).ready(function() {
         $("#getrate").click(function() {
-            /*datastring='base=USD';*/
             datastring=$("form").serialize();
            $.ajax({
                url: "/ajaxreturn",
-               type: "GET",
+               type: "POST",
                data: datastring,
                success: function(result) {
-                   console.log(result);
-                   $("#div1").html(result);
+                   //console.log(result);
+                   var jsonresult=$.parseJSON(result);
+                   var jsoncurrency=jsonresult['currency'];
+                   var jsoncurrencyrate=jsonresult['currencyrate'];
+                   $("#div1").html("<p>The values are <b>" + jsoncurrency + "</b> " + jsoncurrencyrate + "</p>");
                }
            }) 
+        });
+        
+        $("#forexid").keyup(function() {
+            if($("#forexid").val().length === 3) {
+            datastring=$("form").serialize();
+           $.ajax({
+               url: "/ajaxreturn",
+               type: "POST",
+               data: datastring,
+               success: function(result) {
+                   //console.log(result);
+                   var jsonresult=$.parseJSON(result);
+                   var jsoncurrency=jsonresult['currency'];
+                   var jsoncurrencyrate=jsonresult['currencyrate'];
+                   $("#div1").html("<p>The values are <b>" + jsoncurrency + "</b> " + jsoncurrencyrate + "</p>");
+               }
+           }) 
+            }
         });
     });
 </script>
